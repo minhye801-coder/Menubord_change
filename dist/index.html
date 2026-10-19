@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="나이스 월간식단 HWPML과 배포용 HWPX 템플릿을 브라우저 안에서 변환하는 학교급식 도구"
+    />
+    <meta name="theme-color" content="#0b3558" />
+    <title>학교급식 식단 자동변환</title>
+    <link rel="stylesheet" href="./styles.css?v=1.1.1" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M14 32h38c-1 13-8 21-19 21S15 45 14 32Z' fill='%230b3558'/%3E%3Cpath d='M37 31c4-3 5-7 5-13 0-7 3-11 7-11 3 0 5 3 5 7 0 6-3 11-8 14l-3 3Z' fill='%230b3558'/%3E%3Cpath d='M47 13c3-5 8-6 12-4-1 5-4 9-10 10Z' fill='%2324c7b1'/%3E%3Ctext x='33' y='45' text-anchor='middle' font-family='Arial,sans-serif' font-size='12' font-weight='800' fill='white'%3EMH%3C/text%3E%3C/svg%3E"
+    />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="학교급식 식단 자동변환 홈">
+        <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true">
+          <path class="brand-bowl" d="M14 32h38c-1 13-8 21-19 21S15 45 14 32Z" />
+          <path class="brand-spoon" d="M37 31c4-3 5-7 5-13 0-7 3-11 7-11 3 0 5 3 5 7 0 6-3 11-8 14l-3 3Z" />
+          <path class="brand-leaf" d="M47 13c3-5 8-6 12-4-1 5-4 9-10 10Z" />
+          <text x="33" y="45" text-anchor="middle">MH</text>
+        </svg>
+        <span>학교급식 식단 자동변환</span>
+      </a>
+      <div class="privacy-badge" title="선택한 파일은 서버로 전송되지 않습니다">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3 5 6v5c0 4.6 2.8 8.8 7 10 4.2-1.2 7-5.4 7-10V6l-7-3Zm3.4 7.2-4 4a1 1 0 0 1-1.4 0l-1.8-1.8 1.4-1.4 1.1 1.1 3.3-3.3 1.4 1.4Z" />
+        </svg>
+        브라우저 안에서만 처리
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="intro" aria-labelledby="page-title">
+        <p class="eyebrow">NEIS HWPML → 배포용 HWPX</p>
+        <h1 id="page-title">이번 달 식단표를 바로 만드세요</h1>
+        <p>
+          나이스에서 받은 월간식단과 학교의 HWPX 양식을 선택하면 날짜, 메뉴,
+          알레르기 정보와 영양량을 자동으로 정리합니다.
+        </p>
+      </section>
+
+      <section class="quick-guide" aria-labelledby="guide-title">
+        <div class="guide-heading">
+          <span>처음이신가요?</span>
+          <h2 id="guide-title">3단계로 끝나요</h2>
+        </div>
+        <ol>
+          <li><b>1</b><span><strong>나이스 파일 선택</strong><small>월간식단 .hwp</small></span></li>
+          <li><b>2</b><span><strong>학교 템플릿 선택</strong><small>배포용 .hwpx</small></span></li>
+          <li><b>3</b><span><strong>식단 만들기</strong><small>완성 파일 다운로드</small></span></li>
+        </ol>
+      </section>
+
+      <div class="layout">
+        <section class="flow" aria-label="식단 변환 입력">
+          <article class="step-card" id="source-card">
+            <div class="step-heading">
+              <span class="step-number">1</span>
+              <div>
+                <h2>나이스 월간식단</h2>
+                <p>나이스에서 내려받은 XML 형식의 .hwp 파일</p>
+              </div>
+              <span class="step-state" id="source-state">선택 전</span>
+            </div>
+            <label class="file-drop" for="source-file" id="source-drop">
+              <input id="source-file" type="file" accept=".hwp,.xml,text/xml,application/xml" />
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3 7 8h3v6h4V8h3l-5-5ZM5 13v7h14v-7h2v9H3v-9h2Z" />
+              </svg>
+              <span class="drop-copy">
+                <strong>파일을 끌어놓거나 선택하세요</strong>
+                <small id="source-name">예: (202610)월간식단.hwp</small>
+              </span>
+              <span class="choose-button">파일 선택</span>
+            </label>
+          </article>
+
+          <article class="step-card" id="template-card">
+            <div class="step-heading">
+              <span class="step-number">2</span>
+              <div>
+                <h2>배포용 템플릿</h2>
+                <p>기본형 또는 영양량 분리형 월~금 .hwpx 파일</p>
+              </div>
+              <span class="step-state" id="template-state">선택 전</span>
+            </div>
+
+            <div class="saved-template" id="saved-template" hidden>
+              <div class="saved-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M5 3h11l3 3v15H5V3Zm2 2v14h10V8h-3V5H7Zm2 6h6v2H9v-2Zm0 4h6v2H9v-2Z" /></svg>
+              </div>
+              <div>
+                <strong id="saved-template-name">저장된 템플릿</strong>
+                <small id="saved-template-date"></small>
+              </div>
+              <button type="button" class="text-button" id="change-template">변경</button>
+              <button type="button" class="text-button danger" id="delete-template">삭제</button>
+            </div>
+
+            <label class="file-drop compact" for="template-file" id="template-drop">
+              <input id="template-file" type="file" accept=".hwpx,application/zip" />
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3 7 8h3v6h4V8h3l-5-5ZM5 13v7h14v-7h2v9H3v-9h2Z" />
+              </svg>
+              <span class="drop-copy">
+                <strong>HWPX 템플릿을 선택하세요</strong>
+                <small id="template-name">.hwp 파일은 한글에서 HWPX로 먼저 저장해 주세요</small>
+              </span>
+              <span class="choose-button">파일 선택</span>
+            </label>
+
+            <div class="template-options">
+              <label class="check-label">
+                <input id="remember-template" type="checkbox" checked />
+                <span>이 기기에 템플릿 기억하기</span>
+              </label>
+              <a class="sample-link" href="./assets/배포용_템플릿.hwpx" download>
+                변환된 예시 템플릿 받기
+              </a>
+            </div>
+            <div class="template-format">
+              <label for="allergen-notation">알레르기 표기</label>
+              <select id="allergen-notation">
+                <option value="auto">템플릿에서 자동 감지</option>
+                <option value="parenthesized">괄호형 · 메뉴(5.6.9)</option>
+                <option value="plain-dotted">점표기형 · 메뉴 5.6.9.</option>
+              </select>
+              <small id="allergen-hint">템플릿의 기존 메뉴 예시를 확인합니다</small>
+            </div>
+          </article>
+
+          <article class="step-card events-card">
+            <div class="step-heading">
+              <span class="step-number">3</span>
+              <div>
+                <h2>특별 식단일</h2>
+                <p>행사가 없으면 비워 두어도 됩니다</p>
+              </div>
+            </div>
+            <div id="event-list" class="event-list" aria-live="polite"></div>
+            <button type="button" class="add-event" id="add-event">
+              <span aria-hidden="true">＋</span> 행사일 추가
+            </button>
+          </article>
+
+          <button type="button" class="convert-button" id="convert-button" disabled>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 3h7l4 4v14H7V3Zm2 2v14h7V8h-3V5H9Zm2 6h3v2h-3v-2Zm0 4h3v2h-3v-2Z" />
+            </svg>
+            식단 만들기
+          </button>
+        </section>
+
+        <aside class="summary" aria-label="변환 상태">
+          <div class="summary-head">
+            <span class="live-dot" aria-hidden="true"></span>
+            <h2>변환 준비</h2>
+          </div>
+          <div class="month-display" id="month-display">
+            <strong>—</strong>
+            <span>원본을 선택하면 조회년월을 확인합니다</span>
+          </div>
+
+          <ol class="check-list">
+            <li id="check-source"><span></span>나이스 식단 분석</li>
+            <li id="check-template"><span></span>HWPX 템플릿 확인</li>
+            <li id="check-rules"><span></span>v5.6 정렬·서식 적용</li>
+          </ol>
+
+          <div class="rule-card">
+            <div class="rule-card-head">
+              <h3>적용 규칙</h3>
+              <button type="button" data-dialog="rule-settings-dialog">서식 설정</button>
+            </div>
+            <p>밥·주식 → 국·찌개·탕 → 일반 반찬 → 배추김치(자율) → 기타 자율 → 후식 → 영양량</p>
+            <small class="rule-settings-source" id="rule-settings-source">템플릿 선택 전 기본값</small>
+            <dl>
+              <div><dt>줄간격</dt><dd id="rule-summary-line-spacing">140%</dd></div>
+              <div><dt>알레르기</dt><dd id="rule-summary-allergen">9pt / 자간 -10</dd></div>
+              <div><dt>영양량</dt><dd id="rule-summary-nutrition">9pt / 자간 -20</dd></div>
+              <div><dt>자율식 알레르기</dt><dd id="rule-summary-self-allergen">유지</dd></div>
+            </dl>
+          </div>
+
+          <div class="notice" id="notice" role="status" aria-live="polite">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 15h-2v-6h2v6Zm0-8h-2V7h2v2Z" /></svg>
+            <p>선택한 파일은 서버에 저장하거나 전송하지 않습니다.</p>
+          </div>
+
+          <div class="result-card" id="result-card" hidden>
+            <div class="result-icon" aria-hidden="true">✓</div>
+            <div>
+              <strong>식단 변환이 완료되었습니다</strong>
+              <span id="result-detail"></span>
+            </div>
+            <button type="button" id="download-button">HWPX 다운로드</button>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <nav aria-label="사이트 안내">
+          <button type="button" data-dialog="terms-dialog">이용약관</button>
+          <span aria-hidden="true">·</span>
+          <button type="button" data-dialog="privacy-dialog">개인정보 처리 안내</button>
+          <span aria-hidden="true">·</span>
+          <a href="mailto:kmh2172@aiep.gbe.kr">문의</a>
+        </nav>
+        <p><span>v1.0.0</span><span aria-hidden="true">·</span><span>© 2026</span><span aria-hidden="true">·</span><strong>제작 미녜쌤 (@clisz_s)</strong></p>
+      </div>
+    </footer>
+
+    <dialog class="info-dialog" id="terms-dialog" aria-labelledby="terms-title">
+      <div class="dialog-head">
+        <h2 id="terms-title">이용약관</h2>
+        <button type="button" class="dialog-close" aria-label="이용약관 닫기">×</button>
+      </div>
+      <div class="dialog-body">
+        <p>이 도구는 학교급식 식단 문서 작성을 돕기 위한 보조 서비스입니다.</p>
+        <ul>
+          <li>변환 결과는 배포 전에 날짜, 메뉴, 알레르기 및 영양 정보를 반드시 확인해 주세요.</li>
+          <li>사용자가 선택한 파일의 내용과 변환 결과에 대한 최종 확인 책임은 사용자에게 있습니다.</li>
+          <li>문서 형식이나 브라우저 환경에 따라 일부 기능이 제한될 수 있습니다.</li>
+          <li>서비스 내용은 오류 수정과 기능 개선을 위해 변경될 수 있습니다.</li>
+        </ul>
+        <p class="dialog-contact">문의: <a href="mailto:kmh2172@aiep.gbe.kr">kmh2172@aiep.gbe.kr</a></p>
+      </div>
+    </dialog>
+
+    <dialog class="info-dialog" id="rule-settings-dialog" aria-labelledby="rule-settings-title">
+      <div class="dialog-head">
+        <h2 id="rule-settings-title">서식 설정</h2>
+        <button type="button" class="dialog-close" aria-label="서식 설정 닫기">×</button>
+      </div>
+      <div class="dialog-body">
+        <p>템플릿을 선택하면 기존 식단의 서식을 먼저 읽어옵니다. 아래 값은 그 후 필요할 때만 변경하세요.</p>
+        <div class="rule-settings-grid">
+          <label>
+            <span>메뉴 줄간격</span>
+            <span class="number-field"><input id="rule-line-spacing" type="number" min="100" max="200" step="5" value="140" /><b>%</b></span>
+          </label>
+          <label>
+            <span>알레르기 크기</span>
+            <span class="number-field"><input id="rule-allergen-size" type="number" min="7" max="14" step="0.5" value="9" /><b>pt</b></span>
+          </label>
+          <label>
+            <span>알레르기 자간</span>
+            <span class="number-field"><input id="rule-allergen-spacing" type="number" min="-50" max="50" step="1" value="-10" /><b>%</b></span>
+          </label>
+          <label>
+            <span>영양량 크기</span>
+            <span class="number-field"><input id="rule-nutrition-size" type="number" min="7" max="14" step="0.5" value="9" /><b>pt</b></span>
+          </label>
+          <label>
+            <span>영양량 자간</span>
+            <span class="number-field"><input id="rule-nutrition-spacing" type="number" min="-50" max="50" step="1" value="-20" /><b>%</b></span>
+          </label>
+          <label class="rule-check-setting">
+            <span>자율식 알레르기</span>
+            <span><input id="rule-keep-self-allergen" type="checkbox" checked /> 번호 유지</span>
+          </label>
+        </div>
+        <div class="dialog-actions">
+          <button type="button" class="secondary-dialog-button" id="reset-rule-settings">템플릿 값으로 되돌리기</button>
+          <button type="button" class="primary-dialog-button" id="close-rule-settings">완료</button>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog class="info-dialog" id="privacy-dialog" aria-labelledby="privacy-title">
+      <div class="dialog-head">
+        <h2 id="privacy-title">개인정보 처리 안내</h2>
+        <button type="button" class="dialog-close" aria-label="개인정보 처리 안내 닫기">×</button>
+      </div>
+      <div class="dialog-body">
+        <p>선택한 식단 파일과 템플릿은 서버로 전송하거나 서버에 저장하지 않습니다.</p>
+        <ul>
+          <li>모든 문서 변환은 현재 사용 중인 브라우저 안에서 처리됩니다.</li>
+          <li>‘이 기기에 템플릿 기억하기’를 선택하면 템플릿이 해당 브라우저의 IndexedDB에 저장됩니다.</li>
+          <li>템플릿을 기억하도록 선택하면 해당 템플릿에 적용한 서식 설정도 IndexedDB에 함께 저장됩니다.</li>
+          <li>저장된 템플릿은 화면의 ‘삭제’ 버튼 또는 브라우저 사이트 데이터 삭제로 제거할 수 있습니다.</li>
+          <li>이메일 문의 시 제공한 정보는 문의 답변을 위한 용도로만 사용됩니다.</li>
+        </ul>
+      </div>
+    </dialog>
+
+    <template id="event-row-template">
+      <div class="event-row">
+        <label>
+          <span class="sr-only">날짜</span>
+          <input class="event-day" type="number" min="1" max="31" inputmode="numeric" placeholder="날짜" />
+          <small>일</small>
+        </label>
+        <label class="event-title-wrap">
+          <span class="sr-only">행사명</span>
+          <input class="event-title" type="text" maxlength="60" placeholder="예: 지역식재료의날-고령감자" />
+        </label>
+        <button type="button" class="remove-event" aria-label="행사일 삭제">×</button>
+      </div>
+    </template>
+
+    <script src="./vendor/jszip.min.js"></script>
+    <script type="module" src="./app.js?v=1.5.0"></script>
+  </body>
+</html>
